@@ -3,12 +3,14 @@
   <component name="FrameworkDetectionExcludesConfiguration">
     <file type="Quarkus" url="file://$PROJECT_DIR$/api" />
     <file type="Quarkus" url="file://$PROJECT_DIR$/cadastro" />
+    <file type="Quarkus" url="file://$PROJECT_DIR$/commons" />
   </component>
   <component name="MavenProjectsManager">
     <option name="originalFiles">
       <list>
         <option value="$PROJECT_DIR$/api/pom.xml" />
         <option value="$PROJECT_DIR$/cadastro/pom.xml" />
+        <option value="$PROJECT_DIR$/commons/pom.xml" />
       </list>
     </option>
   </component>
