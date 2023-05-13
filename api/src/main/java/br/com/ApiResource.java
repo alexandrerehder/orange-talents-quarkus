@@ -1,32 +1,28 @@
 package br.com;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import jakarta.ws.rs.POST;
+import io.vertx.core.json.JsonObject;
+import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
-
-import javax.inject.Inject;
+import org.eclipse.microprofile.reactive.messaging.Channel;
+import org.eclipse.microprofile.reactive.messaging.Emitter;
 
 
 @Path("/api")
 public class ApiResource {
 
-    private final Logger log = LoggerFactory.getLogger(MessageResource.class);
 
-    @Inject
-    private MessageSender messageSender;
+    @Channel("quarkus-rabbitmq")
+    Emitter<JsonObject> emitter;
 
-    @POST
-    @Produces(MediaType.APPLICATION_JSON)
-    public CadastroInfos sendToSimpleQueue(final CadastroInfos message) {
-        log.info("M=sendToSimpleQueue, I=receiving message to send. message={}", message);
-
-        messageSender.send(DeclaredQueuesEnum.SAMPLE_QUEUE, message);
-
-        return message;
+    @GET
+    @Produces(MediaType.TEXT_PLAIN)
+    public String sendToSimpleQueue() {
+        JsonObject obj = new JsonObject();
+        obj.put("salve", "quebrada");
+        emitter.send(obj);
+        return "Rabbit Working";
     }
 
 }
