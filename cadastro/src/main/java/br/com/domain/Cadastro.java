@@ -1,8 +1,5 @@
 package br.com.domain;
 
-import javax.persistence.*;
-import java.time.LocalDateTime;
-import java.util.UUID;
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import io.smallrye.common.constraint.NotNull;
 import jakarta.validation.constraints.Email;
@@ -11,12 +8,15 @@ import jakarta.validation.constraints.NotBlank;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import javax.persistence.*;
+import java.time.LocalDateTime;
+
 @Entity
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = {"email"}))
 public class Cadastro extends PanacheEntityBase {
 
     @Id
-    public UUID id;
+    public Long id;
 
     @Email @NotBlank @NotNull
     public String email;

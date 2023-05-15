@@ -1,12 +1,14 @@
 package br.com;
 
+import br.com.dto.CadastroDTO;
 import br.com.dto.QueueRequestDTO;
+import br.com.dto.QueueResponseDTO;
+import br.com.service.CadastroService;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import org.eclipse.microprofile.reactive.messaging.Incoming;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import br.com.dto.CadastroDTO;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -19,43 +21,50 @@ public class Consumer {
     private final Logger log = LoggerFactory.getLogger(Consumer.class);
 
     @Inject
-    CadastroTransformMapper mapper;
+    CadastroService cadastroService;
+
 
     @Incoming("quarkus-rabbitmq")
 
-    public QueueResponseDTO processaEnvioAutor(QueueRequestDTO request) throws Exception {
+    public QueueResponseDTO processaCriacaoCadastro(QueueRequestDTO request) throws Exception {
         QueueResponseDTO response = new QueueResponseDTO();
 
         switch (request.getCrudMethod()) {
 
-            case GET:
+            case INSERT:
                 try {
-                    UUID id = (UUID) request.getObjeto();
-                    log.info("ID recebido:" + "\n" + id);
+                    CadastroDTO cadastro = (CadastroDTO) request.getObjeto();
+                    log.info("Objeto recebido:" + "\n" + cadastro);
 
-                    CadastroDTO autorPorId = autorService.buscarAutorPorId(id);
+                    Long id = (Long) request.getObjeto();
 
-                    if (Objects.isNull(autorPorId.getId())) {
-                        log.info("Autor não encontrado");
+                    CadastroDTO clienteExistente = cadastroService.buscarCadastroPorId(id);
 
-                        response.setMensagemRetorno("Autor não encontrado");
+                    if (Objects.nonNull(clienteExistente.getId())) {
+                        log.info("Listener: Cliente já cadastrado");
+
+                        response.setMensagemRetorno("Cliente já cadastrado. Verifique se as informações estão corretas");
                         response.setErro(false);
                         response.setObjeto("Data/Horário da transação: " + LocalDateTime.now());
+
                     } else {
-                        log.info("Autor referente ao ID:" + "\n" + autorPorId);
+                        cadastroService.criarCadastro(cadastro);
+                        log.info("Cliente cadastrado:");
 
-                        response.setMensagemRetorno("Autor encontrado");
+                        response.setMensagemRetorno("Cliente cadastrado com sucesso");
                         response.setErro(false);
-                        response.setObjeto(autorPorId);
                     }
-
                 } catch (Exception e) {
                     response.setMensagemRetorno(e.getMessage());
                     response.setErro(true);
                     response.setObjeto(e);
-                    log.error("Falha ao buscar autor: " + response);
+                    log.error("Falha ao cadastrar cliente: " + response);
                 }
 
                 break;
         }
+        return response;
     }
+}
+
+
