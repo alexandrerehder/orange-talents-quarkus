@@ -1,6 +1,8 @@
 package br.com;
 
-import io.vertx.core.json.JsonObject;
+import br.com.dto.CadastroDTO;
+import br.com.dto.CrudMethod;
+import br.com.dto.QueueRequestDTO;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
@@ -19,15 +21,16 @@ public class ApiResource {
     private final Logger log = LoggerFactory.getLogger(ApiResource.class);
 
     @Channel("quarkus-rabbitmq")
-    Emitter<JsonObject> emitter;
+    Emitter<QueueRequestDTO> emitter;
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public ResponseEntity<String> sendToSimpleQueue() {
+    public ResponseEntity<String> sendToSimpleQueue(@RequestBody CadastroDTO dto) {
         try {
-            JsonObject obj = new JsonObject();
-            obj.put("salve", "quebrada");
-            emitter.send(obj);
+            QueueRequestDTO request = new QueueRequestDTO();
+            request.setObjeto(dto);
+            request.setCrudMethod(CrudMethod.GET);
+            emitter.send(request);
             return ResponseEntity.ok("Operação realizada com sucesso!");
 
         } catch (Exception e) {

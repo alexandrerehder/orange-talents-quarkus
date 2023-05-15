@@ -73,6 +73,10 @@
       <artifactId>rest-assured</artifactId>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>br.com</groupId>
+      <artifactId>commons</artifactId>
+    </dependency>
   </dependencies>
   <build>
     <plugins>
