@@ -1,4 +1,4 @@
-package br.com;
+package br.com.consumer;
 
 import br.com.dto.CadastroDTO;
 import br.com.dto.QueueRequestDTO;
@@ -10,9 +10,9 @@ import org.eclipse.microprofile.reactive.messaging.Incoming;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+
 import java.time.LocalDateTime;
 import java.util.Objects;
-import java.util.UUID;
 
 
 @ApplicationScoped
@@ -22,7 +22,6 @@ public class Consumer {
 
     @Inject
     CadastroService cadastroService;
-
 
     @Incoming("quarkus-rabbitmq")
 

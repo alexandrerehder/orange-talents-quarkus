@@ -3,14 +3,13 @@ package br.com.mapper;
 import br.com.domain.Cadastro;
 import br.com.dto.CadastroDTO;
 import org.mapstruct.Mapper;
-import org.mapstruct.factory.Mappers;
+import org.mapstruct.Mapping;
 
-@Mapper
-public abstract class CadastroTransformMapper {
+@Mapper(componentModel = "cdi")
+public interface CadastroTransformMapper {
 
-    CadastroTransformMapper INSTANCE = Mappers.getMapper(CadastroTransformMapper.class);
+    CadastroDTO toDTO(Cadastro cadastro);
 
-    public abstract CadastroDTO toDTO(Cadastro cadastro);
-
-    public abstract Cadastro toEntity(CadastroDTO dto);
+    @Mapping(target = "id", ignore = true)
+    Cadastro toEntity(CadastroDTO dto);
 }
