@@ -10,7 +10,6 @@ import org.eclipse.microprofile.reactive.messaging.Incoming;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 import java.time.LocalDateTime;
 import java.util.Objects;
 

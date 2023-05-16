@@ -16,6 +16,4 @@ public class CadastroDTO implements Serializable {
     private String email;
     private String senha;
     private LocalDateTime dataCriacao;
-    private LocalDateTime dataAtualizacao;
-
 }

@@ -10,15 +10,13 @@ import jakarta.transaction.Transactional;
 
 import java.util.Optional;
 
-
 @ApplicationScoped
 public class CadastroService {
 
     @Inject
     CadastroRepository cadastroRepository;
+    private CadastroTransformMapper mapper;
 
-    @Inject
-    CadastroTransformMapper mapper;
 
     @Transactional
     public void criarCadastro(CadastroDTO dto) {

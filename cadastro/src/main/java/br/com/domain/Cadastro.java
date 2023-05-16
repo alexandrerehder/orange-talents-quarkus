@@ -1,27 +1,33 @@
 package br.com.domain;
 
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
-import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"email"}))
+@Getter
+@Setter
 public class Cadastro extends PanacheEntityBase {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Long id;
 
-    public String email;
+    @Column(nullable = false)
+    private String email;
 
-    public String senha;
+    @Column(nullable = false)
+    private String senha;
 
-    @CreationTimestamp @Column(name = "data_criacao")
-    public LocalDateTime dataCriacao;
+    @Column(name = "data_criacao")
+    private LocalDateTime dataCriacao;
 
-    @UpdateTimestamp @Column(name = "data_atualizacao")
-    public LocalDateTime dataAtualizacao;
+    @PrePersist
+    public void prePersist() {
+        this.dataCriacao = LocalDateTime.now();
+    }
 
 }
