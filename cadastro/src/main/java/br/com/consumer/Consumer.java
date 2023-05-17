@@ -24,44 +24,8 @@ public class Consumer {
 
     @Incoming("quarkus-rabbitmq")
 
-    public QueueResponseDTO processaCriacaoCadastro(QueueRequestDTO request) throws Exception {
-        QueueResponseDTO response = new QueueResponseDTO();
-
-        switch (request.getCrudMethod()) {
-
-            case INSERT:
-                try {
-                    CadastroDTO cadastro = (CadastroDTO) request.getObjeto();
-                    log.info("Objeto recebido:" + "\n" + cadastro);
-
-                    Long id = (Long) request.getObjeto();
-
-                    CadastroDTO clienteExistente = cadastroService.buscarCadastroPorId(id);
-
-                    if (Objects.nonNull(clienteExistente.getId())) {
-                        log.info("Listener: Cliente já cadastrado");
-
-                        response.setMensagemRetorno("Cliente já cadastrado. Verifique se as informações estão corretas");
-                        response.setErro(false);
-                        response.setObjeto("Data/Horário da transação: " + LocalDateTime.now());
-
-                    } else {
-                        cadastroService.criarCadastro(cadastro);
-                        log.info("Cliente cadastrado:");
-
-                        response.setMensagemRetorno("Cliente cadastrado com sucesso");
-                        response.setErro(false);
-                    }
-                } catch (Exception e) {
-                    response.setMensagemRetorno(e.getMessage());
-                    response.setErro(true);
-                    response.setObjeto(e);
-                    log.error("Falha ao cadastrar cliente: " + response);
-                }
-
-                break;
-        }
-        return response;
+    public void processaCriacaoCadastro(QueueRequestDTO request) throws Exception {
+        log.info("chegou" + request);
     }
 }
 
