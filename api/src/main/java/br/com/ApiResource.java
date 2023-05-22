@@ -1,8 +1,11 @@
 package br.com;
 
+import br.com.config.DeclaredQueuesEnum;
 import br.com.dto.CadastroDTO;
 import br.com.dto.CrudMethod;
 import br.com.dto.QueueRequestDTO;
+import br.com.sender.MessageSender;
+import jakarta.inject.Inject;
 import jakarta.ws.rs.POST;
 import org.eclipse.microprofile.reactive.messaging.Channel;
 import org.eclipse.microprofile.reactive.messaging.Emitter;
@@ -22,19 +25,18 @@ public class ApiResource {
 
     private final Logger log = LoggerFactory.getLogger(ApiResource.class);
 
-    @Channel("quarkus-rabbitmq")
-    Emitter<QueueRequestDTO> emitter;
+    @Inject
+    private MessageSender messageSender;
 
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     public ResponseEntity<String> sendToSimpleQueue(@RequestBody CadastroDTO dto) {
         try {
             QueueRequestDTO request = new QueueRequestDTO();
-            log.info(String.valueOf(dto));
             request.setObjeto(dto);
             request.setCrudMethod(CrudMethod.INSERT);
-            emitter.send(request);
-            return ResponseEntity.ok("Operação realizada com sucesso!" + dto);
+            messageSender.send(DeclaredQueuesEnum.SAMPLE_QUEUE, request);
+            return ResponseEntity.ok("Operação realizada com sucesso!");
 
         } catch (Exception e) {
             log.error("Erro ao enviar autor para o RabbitMQ", e);
